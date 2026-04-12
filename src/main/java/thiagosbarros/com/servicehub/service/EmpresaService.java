@@ -3,6 +3,7 @@ package thiagosbarros.com.servicehub.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thiagosbarros.com.servicehub.entity.Empresa;
+import thiagosbarros.com.servicehub.exception.EmpresaNaoEncontradaException;
 import thiagosbarros.com.servicehub.repository.EmpresaRepository;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class EmpresaService {
     @Transactional(readOnly = true)
     public Empresa buscarPorId(Long id) {
         return empresaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Empresa nao encontrada para o id: " + id));
+                .orElseThrow(() -> new EmpresaNaoEncontradaException("Empresa nao encontrada para o id: " + id));
     }
 
     @Transactional(readOnly = true)

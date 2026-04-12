@@ -1,4 +1,7 @@
 package thiagosbarros.com.servicehub.exception;
 
-public class ClienteNaoEncontradoException {
+public class ClienteNaoEncontradoException extends RuntimeException {
+    public ClienteNaoEncontradoException(String mensagem) {
+        super(mensagem);
+    }
 }

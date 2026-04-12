@@ -3,6 +3,7 @@ package thiagosbarros.com.servicehub.entity;
 import jakarta.persistence.*;
 import thiagosbarros.com.servicehub.entity.enums.StatusAgendamento;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ public class Agendamento {
     private Long id;
 
     @Column(name = "data_hora_inicio", nullable = false)
-    private LocalDateTime dataHoraInicio;
+    private Instant dataHoraInicio;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -30,28 +31,27 @@ public class Agendamento {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private StatusAgendamento status;
+    private StatusAgendamento status = StatusAgendamento.PENDENTE;
 
     protected Agendamento() {
     }
 
-    public Agendamento(LocalDateTime dataHoraInicio, Cliente cliente, Servico servico, Empresa empresa, StatusAgendamento status) {
+    public Agendamento(Instant dataHoraInicio, Cliente cliente, Servico servico, Empresa empresa) {
         this.dataHoraInicio = dataHoraInicio;
         this.cliente = cliente;
         this.servico = servico;
         this.empresa = empresa;
-        this.status = status;
     }
 
     public Long getId() {
         return id;
     }
 
-    public LocalDateTime getDataHoraInicio() {
+    public Instant getDataHoraInicio() {
         return dataHoraInicio;
     }
 
-    public void setDataHoraInicio(LocalDateTime dataHoraInicio) {
+    public void setDataHoraInicio(Instant dataHoraInicio) {
         this.dataHoraInicio = dataHoraInicio;
     }
 
