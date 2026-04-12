@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: servicehub
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_servicehub
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    locations: classpath:db/migration

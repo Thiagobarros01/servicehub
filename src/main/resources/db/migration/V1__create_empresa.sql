@@ -1,0 +1,5 @@
+CREATE TABLE empresa (
+    id BIGSERIAL PRIMARY KEY ,
+    nome VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW() NOT NULL
+);
