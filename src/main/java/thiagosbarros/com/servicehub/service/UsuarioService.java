@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thiagosbarros.com.servicehub.entity.Empresa;
 import thiagosbarros.com.servicehub.entity.Usuario;
+import thiagosbarros.com.servicehub.exception.BusinessException;
+import thiagosbarros.com.servicehub.exception.UsuarioNaoEncontradoException;
 import thiagosbarros.com.servicehub.repository.UsuarioRepository;
 
 @Service
@@ -21,9 +23,8 @@ public class UsuarioService {
     public Usuario salvar(Long empresaId, Usuario usuario) {
         Empresa empresa = empresaService.buscarPorId(empresaId);
 
-        Usuario usuarioExistente = usuarioRepository.findByEmpresaIdAndEmail(empresaId, usuario.getEmail());
-        if (usuarioExistente != null) {
-            throw new IllegalArgumentException("Ja existe um usuario com este email na empresa informada.");
+        if (usuarioRepository.findByEmpresaIdAndEmail(empresaId, usuario.getEmail()).isPresent()) {
+            throw new BusinessException("Ja existe um usuario com este email na empresa informada.");
         }
 
         usuario.setEmpresa(empresa);
@@ -31,17 +32,14 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public Usuario buscarPorId(Long id) {
-        return usuarioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario nao encontrado para o id: " + id));
+    public Usuario buscarPorId(Long empresaId, Long id) {
+        return usuarioRepository.findByEmpresaIdAndId(empresaId, id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuario nao encontrado para o id: " + id));
     }
 
     @Transactional(readOnly = true)
     public Usuario buscarPorEmailDaEmpresa(Long empresaId, String email) {
-        Usuario usuario = usuarioRepository.findByEmpresaIdAndEmail(empresaId, email);
-        if (usuario == null) {
-            throw new IllegalArgumentException("Usuario nao encontrado para a empresa e email informados.");
-        }
-        return usuario;
+        return usuarioRepository.findByEmpresaIdAndEmail(empresaId, email)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuario nao encontrado para a empresa e email informados."));
     }
 }

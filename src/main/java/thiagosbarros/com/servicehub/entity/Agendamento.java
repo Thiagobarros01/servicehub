@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import thiagosbarros.com.servicehub.entity.enums.StatusAgendamento;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
