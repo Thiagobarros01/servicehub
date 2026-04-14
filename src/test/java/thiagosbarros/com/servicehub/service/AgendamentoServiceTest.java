@@ -149,10 +149,11 @@ class AgendamentoServiceTest {
             agendamentoService.criar(empresaId, clienteId, servicoId, novoInicio);
         });
 
+        //3 - Verificação
         Mockito.verify(clienteRepository, Mockito.never()).findByIdAndEmpresaId(Mockito.anyLong(),Mockito.anyLong());
         Mockito.verify(servicoRepository, Mockito.never()).findByEmpresaIdAndId(Mockito.anyLong(), Mockito.anyLong());
         Mockito.verify(agendamentoRepository, Mockito.never()).save(Mockito.any());
-        //3 - Verificação
+
 
     }
 
