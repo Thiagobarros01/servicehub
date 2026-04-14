@@ -1,12 +1,24 @@
 package thiagosbarros.com.servicehub.service;
 
+import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import thiagosbarros.com.servicehub.entity.Agendamento;
 import thiagosbarros.com.servicehub.entity.Cliente;
 import thiagosbarros.com.servicehub.entity.Empresa;
@@ -20,16 +32,6 @@ import thiagosbarros.com.servicehub.repository.AgendamentoRepository;
 import thiagosbarros.com.servicehub.repository.ClienteRepository;
 import thiagosbarros.com.servicehub.repository.EmpresaRepository;
 import thiagosbarros.com.servicehub.repository.ServicoRepository;
-
-import java.math.BigDecimal;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class AgendamentoServiceTest {
@@ -50,6 +52,17 @@ class AgendamentoServiceTest {
 
     @BeforeEach
     void setUp() {
+
+        Long empresaId = 1L;
+        Long clienteId = 2L;
+        Long servicoId = 3L;
+        Instant novoInicio = Instant.parse("2026-04-13T16:00:00Z");
+
+        Usuario dono = new Usuario("Thiago", "thiago@gmail.com", "123", Role.DONO, null);
+        Empresa empresa = new Empresa("ZILFARMA", dono);
+        Cliente cliente = new Cliente("Teta", "teta@gmail.com", LocalDate.of(1998, 1, 10), empresa);
+        Servico servico = new Servico("Corte", 60, BigDecimal.valueOf(50), empresa);
+
         clock = Clock.fixed(Instant.parse("2026-04-13T15:00:00Z"), ZoneOffset.UTC);
 
         agendamentoService = new AgendamentoService(
@@ -60,6 +73,7 @@ class AgendamentoServiceTest {
                 clock
         );
     }
+
 
     @Test
     void deveCriarAgendamentoComSucesso() {
@@ -157,6 +171,20 @@ class AgendamentoServiceTest {
 
     }
 
+    @Test
+    void deveLancarExcecaoQuandoDataForNoPassado(){
 
+            Instant agora = Instant.parse("2026-04-13T16:00:00Z");
+    
+            Instant horaAgendada = Instant.parse("2026-04-12T13:00:00Z");
+
+           assertThrows(BusinessException.class, ()-> {
+                if(horaAgendada.isBefore(agora));
+           });
+        
+    
+    }
+
+  
 
 }
