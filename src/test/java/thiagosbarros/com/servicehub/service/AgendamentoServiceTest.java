@@ -1,5 +1,6 @@
 package thiagosbarros.com.servicehub.service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,8 @@ import thiagosbarros.com.servicehub.entity.Servico;
 import thiagosbarros.com.servicehub.entity.Usuario;
 import thiagosbarros.com.servicehub.entity.enums.Role;
 import thiagosbarros.com.servicehub.entity.enums.StatusAgendamento;
+import thiagosbarros.com.servicehub.exception.BusinessException;
+import thiagosbarros.com.servicehub.exception.EmpresaNaoEncontradaException;
 import thiagosbarros.com.servicehub.repository.AgendamentoRepository;
 import thiagosbarros.com.servicehub.repository.ClienteRepository;
 import thiagosbarros.com.servicehub.repository.EmpresaRepository;
@@ -60,7 +63,6 @@ class AgendamentoServiceTest {
 
     @Test
     void deveCriarAgendamentoComSucesso() {
-        // arrange
         Long empresaId = 1L;
         Long clienteId = 2L;
         Long servicoId = 3L;
@@ -92,6 +94,65 @@ class AgendamentoServiceTest {
         assertEquals(servico, agendamento.getServico());
         assertEquals(empresa, agendamento.getEmpresa());
         assertEquals(dataHoraInicio, agendamento.getDataHoraInicio());
+
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoHouverConflitoDeHorario(){
+
+        Long empresaId = 1L;
+        Long clienteId = 2L;
+        Long servicoId = 3L;
+        Instant novoInicio = Instant.parse("2026-04-13T16:00:00Z");
+
+        Usuario dono = new Usuario("Thiago", "thiago@gmail.com", "123", Role.DONO, null);
+        Empresa empresa = new Empresa("ZILFARMA", dono);
+        Cliente cliente = new Cliente("Teta", "teta@gmail.com", LocalDate.of(1998, 1, 10), empresa);
+        Servico servico = new Servico("Corte", 60, BigDecimal.valueOf(50), empresa);
+
+
+        Agendamento existente = new Agendamento(
+                Instant.parse("2026-04-13T15:30:00Z"),
+                cliente,
+                servico,
+                empresa
+        );
+
+        Mockito.when(empresaRepository.findById(empresaId)).thenReturn(Optional.of(empresa));
+        Mockito.when(clienteRepository.findByIdAndEmpresaId(clienteId,empresaId)).thenReturn(Optional.of(cliente));
+        Mockito.when(servicoRepository.findByEmpresaIdAndId(empresaId,servicoId)).thenReturn(Optional.of(servico));
+        Mockito.when(agendamentoRepository.findByEmpresaIdAndServicoIdAndDataHoraInicioBefore(
+                empresaId, servicoId, novoInicio.plusSeconds(3600)
+        )).thenReturn(List.of(existente));
+
+        assertThrows(BusinessException.class, () ->
+                agendamentoService.criar(empresaId, clienteId, servicoId, novoInicio)
+        );
+
+        Mockito.verify(agendamentoRepository, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
+    void deveDarErroEmpresaNaoEncontrada() {
+        //1 - Cenário
+        Long empresaId = 1L;
+        Long clienteId = 2L;
+        Long servicoId = 3L;
+        Instant novoInicio = Instant.parse("2026-04-13T16:00:00Z");
+
+        Mockito.when(empresaRepository.findById(empresaId))
+                .thenReturn(Optional.empty());
+
+        // 2 - Execução
+
+        Assertions.assertThrows(EmpresaNaoEncontradaException.class, () -> {
+            agendamentoService.criar(empresaId, clienteId, servicoId, novoInicio);
+        });
+
+        Mockito.verify(clienteRepository, Mockito.never()).findByIdAndEmpresaId(Mockito.anyLong(),Mockito.anyLong());
+        Mockito.verify(servicoRepository, Mockito.never()).findByEmpresaIdAndId(Mockito.anyLong(), Mockito.anyLong());
+        Mockito.verify(agendamentoRepository, Mockito.never()).save(Mockito.any());
+        //3 - Verificação
 
     }
 
