@@ -16,6 +16,7 @@ import thiagosbarros.com.servicehub.entity.enums.StatusAgendamento;
 import thiagosbarros.com.servicehub.exception.BusinessException;
 import thiagosbarros.com.servicehub.exception.ClienteNaoEncontradoException;
 import thiagosbarros.com.servicehub.exception.EmpresaNaoEncontradaException;
+import thiagosbarros.com.servicehub.exception.ServicoNaoEncontradoException;
 import thiagosbarros.com.servicehub.repository.AgendamentoRepository;
 import thiagosbarros.com.servicehub.repository.ClienteRepository;
 import thiagosbarros.com.servicehub.repository.EmpresaRepository;
@@ -196,6 +197,26 @@ class AgendamentoServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoServicoNaoExistir(){
+        //Cenário
+
+        Long empresaId = 1L;
+        Long clienteId = 2L;
+        Long servicoId = 3L;
+
+        Instant dataHoraInicio = Instant.parse("2026-04-15T17:00:00Z");
+
+        assertThrows(ServicoNaoEncontradoException.class, ()->
+
+       agendamentoService.criar(empresaId, clienteId, servicoId, dataHoraInicio));
+ 
+
+       Mockito.verify(empresaRepository).findById(empresaId);
+       Mockito.verify(clienteRepository).findByIdAndEmpresaId(clienteId, empresaId);
+       Mockito.verify(mock)
 
     }
+    
+
+    // ação
+   
 }
