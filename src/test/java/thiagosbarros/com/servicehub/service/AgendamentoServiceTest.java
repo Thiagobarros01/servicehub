@@ -205,18 +205,25 @@ class AgendamentoServiceTest {
 
         Instant dataHoraInicio = Instant.parse("2026-04-15T17:00:00Z");
 
-        assertThrows(ServicoNaoEncontradoException.class, ()->
+        Mockito.when(empresaRepository.findById(empresaId)).thenReturn(Optional.of(empresa));
+        Mockito.when(clienteRepository.findByIdAndEmpresaId(clienteId, empresaId)).thenReturn(Optional.of(cliente));
+        Mockito.when(servicoRepository.findByEmpresaIdAndId(empresaId, servicoId))
+                .thenReturn(Optional.empty());
 
+
+        // Ação
+        assertThrows(ServicoNaoEncontradoException.class, ()->
        agendamentoService.criar(empresaId, clienteId, servicoId, dataHoraInicio));
- 
+
+
+        //Assert
 
        Mockito.verify(empresaRepository).findById(empresaId);
        Mockito.verify(clienteRepository).findByIdAndEmpresaId(clienteId, empresaId);
-       Mockito.verify(mock)
+       Mockito.verify(servicoRepository).findByEmpresaIdAndId(empresaId, servicoId);
+       Mockito.verify(agendamentoRepository, Mockito.never()).save(Mockito.any());
 
     }
-    
 
-    // ação
    
 }
