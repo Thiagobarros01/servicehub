@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 
 @WebMvcTest(ServicoController.class)
 @Import({ServicoMapper.class, GlobalExceptionHandler.class})
-public class ServiceControllerTest {
+public class ServicoControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -61,5 +61,7 @@ public class ServiceControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("TS TEC"));
 
   }
+
+  
 
 }
