@@ -1,0 +1,217 @@
+{
+  "info": {
+    "_postman_id": "e97ee2ca-5ef8-4d63-91f8-6fdb2f4ce8f3",
+    "name": "ServiceHub",
+    "description": "Collection inicial do projeto ServiceHub para testar os endpoints atuais.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "empresaId",
+      "value": "1"
+    },
+    {
+      "key": "clienteId",
+      "value": "1"
+    },
+    {
+      "key": "servicoId",
+      "value": "1"
+    },
+    {
+      "key": "agendamentoId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Empresas",
+      "item": [
+        {
+          "name": "Criar Empresa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"ZILFARMA\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/empresas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "empresas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Empresa por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/empresas/{{empresaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "empresas",
+                "{{empresaId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Criar Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Thiago\",\n  \"email\": \"thiago@gmail.com\",\n  \"dataNascimento\": \"1998-01-10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/empresas/{{empresaId}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "empresas",
+                "{{empresaId}}",
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Cliente por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/empresas/{{empresaId}}/clientes/{{clienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "empresas",
+                "{{empresaId}}",
+                "clientes",
+                "{{clienteId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Servicos",
+      "item": [
+        {
+          "name": "Criar Servico",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Corte\",\n  \"duracaoMinutos\": 60,\n  \"preco\": 50.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/empresas/{{empresaId}}/servicos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "empresas",
+                "{{empresaId}}",
+                "servicos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Servico por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/empresas/{{empresaId}}/servicos/{{servicoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "empresas",
+                "{{empresaId}}",
+                "servicos",
+                "{{servicoId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Agendamentos",
+      "item": [
+        {
+          "name": "Criar Agendamento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": {{clienteId}},\n  \"servicoId\": {{servicoId}},\n  \"dataHoraInicio\": \"2099-12-31T15:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/empresas/{{empresaId}}/agendamentos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "empresas",
+                "{{empresaId}}",
+                "agendamentos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
